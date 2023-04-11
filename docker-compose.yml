@@ -5,4 +5,4 @@ services:
     volumes:
       - .:/vgn-sifon-backend
     ports:
-      - 5000
+      - 5000:5000
