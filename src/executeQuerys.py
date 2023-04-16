@@ -1,10 +1,8 @@
 from flask import Blueprint, render_template, abort
 import sqlite3
-#conn = sqlite3.connect('sifono_database.db', check_same_thread=False)
 
 querysView = Blueprint('querysView', __name__, template_folder='templates')
 
-#@querysView.route('/execute/<string>')
 def executeQuery(string):
     with sqlite3.connect("sifono_db.db") as con:
         c = con.cursor()
@@ -12,6 +10,29 @@ def executeQuery(string):
         con.commit()
     con.close() 
     return "OK"
+
+def getQueryData(string):
+    queryData = []
+    with sqlite3.connect("sifono_db.db") as con:
+        c = con.cursor()
+        c.execute(string)
+        rows = c.fetchall()
+        names = list(map(lambda x: x[0], c.description))
+        for rowsValues in rows:
+            dictA = {}
+            for i, value in enumerate(rowsValues):
+                dictA[names[i]] = value
+            queryData.append(dictA)
+
+    return queryData
+
+def getQueryScalar(string):
+    with sqlite3.connect("sifono_db.db") as con:
+            c = con.cursor()        
+            c.execute(string)
+            scalar=c.fetchone()
+            return scalar
+    con.close()
 
 #c = conn.cursor()
 # Create table

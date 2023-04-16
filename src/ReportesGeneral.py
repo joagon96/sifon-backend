@@ -1,70 +1,35 @@
 import sqlite3
+from src.executeQuerys import getQueryScalar
 
 def ContadorClientes():
-    with sqlite3.connect("sifono_db.db") as con:
-            c = con.cursor()        
-            c.execute("SELECT COUNT(*) FROM Cliente")
-            cantidad=c.fetchone()
-            return cantidad
-    con.close()
+    return getQueryScalar("SELECT COUNT(*) FROM Cliente")
 
-def ContadorZonas():
-    with sqlite3.connect("sifono_db.db") as con:
-            c = con.cursor()        
-            c.execute("SELECT COUNT(*) FROM Zona")
-            cantidad=c.fetchone()
-            return cantidad
-    con.close()
+def ContadorZonas():       
+    return getQueryScalar("SELECT COUNT(*) FROM Zona")
 
-def ContadorRepartidores():
-    with sqlite3.connect("sifono_db.db") as con:
-            c = con.cursor()        
-            c.execute("SELECT COUNT(*) FROM Repartidor")
-            cantidad=c.fetchone()
-            return cantidad
-    con.close()
+def ContadorRepartidores():     
+    return getQueryScalar("SELECT COUNT(*) FROM Repartidor")
 
+def ContadorRepartos():      
+    return getQueryScalar("SELECT COUNT(*) FROM Reparto")
 
-def ContadorRepartos():
-    with sqlite3.connect("sifono_db.db") as con:
-            c = con.cursor()        
-            c.execute("SELECT COUNT(*) FROM Reparto")
-            cantidad=c.fetchone()
-            return cantidad
-    con.close()
-
-def ContadorBidones12():
-    with sqlite3.connect("sifono_db.db") as con:
-            c = con.cursor()        
-            c.execute("SELECT com12 FROM Reparto")
-            cantidad=c.fetchall()
-            suma=0
-            for i in cantidad:
-                for j in i:
-                    suma = suma + j 
-            return suma
-    con.close()
+def ContadorBidones12():   
+    return calcularSumatoria("SELECT com12 FROM Reparto")
 
 def ContadorBidones20():
-    with sqlite3.connect("sifono_db.db") as con:
-            c = con.cursor()        
-            c.execute("SELECT com20 FROM Reparto")
-            cantidad=c.fetchall()
-            suma=0
-            for i in cantidad:
-                for j in i:
-                    suma = suma + j 
-            return suma
-    con.close()
+    return calcularSumatoria("SELECT com20 FROM Reparto")
 
 def ContadorSoda():
-    with sqlite3.connect("sifono_db.db") as con:
+    return calcularSumatoria("SELECT comSoda FROM Reparto")
+
+def calcularSumatoria(query):
+     with sqlite3.connect("sifono_db.db") as con:
             c = con.cursor()        
-            c.execute("SELECT comSoda FROM Reparto")
+            c.execute(query)
             cantidad=c.fetchall()
             suma=0
             for i in cantidad:
                 for j in i:
                     suma = suma + j 
             return suma
-    con.close()
+            con.close()
