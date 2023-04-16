@@ -1,21 +1,21 @@
-from flask import Blueprint, render_template, abort
+from flask import Blueprint
 import sqlite3
 
 querysView = Blueprint('querysView', __name__, template_folder='templates')
 
-def executeQuery(string):
+def executeQuery(query):
     with sqlite3.connect("sifono_db.db") as con:
         c = con.cursor()
-        c.execute(string)
+        c.execute(query)
         con.commit()
     con.close() 
     return "OK"
 
-def getQueryData(string):
+def getQueryData(query):
     queryData = []
     with sqlite3.connect("sifono_db.db") as con:
         c = con.cursor()
-        c.execute(string)
+        c.execute(query)
         rows = c.fetchall()
         names = list(map(lambda x: x[0], c.description))
         for rowsValues in rows:
@@ -26,13 +26,26 @@ def getQueryData(string):
 
     return queryData
 
-def getQueryScalar(string):
+def getQueryScalar(query):
     with sqlite3.connect("sifono_db.db") as con:
             c = con.cursor()        
-            c.execute(string)
+            c.execute(query)
             scalar=c.fetchone()
             return scalar
     con.close()
+
+def getQuerySum(query):
+    with sqlite3.connect("sifono_db.db") as con:
+            c = con.cursor()        
+            c.execute(query)
+            cantidad=c.fetchall()
+            suma=0
+            for i in cantidad:
+                for j in i:
+                    suma = suma + j 
+            return suma
+            con.close()
+
 
 #c = conn.cursor()
 # Create table
