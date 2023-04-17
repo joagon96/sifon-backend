@@ -1,5 +1,5 @@
 from flask import request
-from src.executeQuerys import executeQuery
+from src.executeQuerys import executeQuery, getQueryData
 
 def bajaCliente():
     idCliente2 = request.form.get('idCliente')       
@@ -7,9 +7,11 @@ def bajaCliente():
     executeQuery("UPDATE Cliente SET habilitadoC=? WHERE idCliente = ?", (hab,idCliente2,) )
 
 def bajaRepartidor():
-    idRepartidor2 = request.form.get('idRepartidor')            
+    idRepartidor2 = request.form.get('idRepartidor')
+    data = getQueryData("SELECT nomapeRep FROM Repartidor WHERE idRepartidor = ?", (idRepartidor2,))     
     hab = 0      
     executeQuery("UPDATE Repartidor SET habilitadoRep=? WHERE idRepartidor = ?", (hab,idRepartidor2,))
+    executeQuery("DELETE FROM Usuario WHERE usuario=?", (data[0]['nomapeRep'],))
 
 def bajaReparto():
     idReparto2 = request.form.get('idReparto')            

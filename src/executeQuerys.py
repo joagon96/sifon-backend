@@ -3,19 +3,19 @@ import sqlite3
 
 querysView = Blueprint('querysView', __name__, template_folder='templates')
 
-def executeQuery(query):
+def executeQuery(query, args):
     with sqlite3.connect("sifono_db.db") as con:
         c = con.cursor()
-        c.execute(query)
+        c.execute(query, args)
         con.commit()
     con.close() 
     return "OK"
 
-def getQueryData(query):
+def getQueryData(query, args=""):
     queryData = []
     with sqlite3.connect("sifono_db.db") as con:
         c = con.cursor()
-        c.execute(query)
+        c.execute(query, args)
         rows = c.fetchall()
         names = list(map(lambda x: x[0], c.description))
         for rowsValues in rows:
@@ -26,10 +26,18 @@ def getQueryData(query):
 
     return queryData
 
-def getQueryScalar(query):
+def getSingleQueryData(query, args=()):
+    with sqlite3.connect("sifono_db.db") as con:
+        c = con.cursor()
+        c.execute(query, args)
+        rv = c.fetchall()
+        c.close()
+        return rv[0][0]
+
+def getQueryScalar(query, args =""):
     with sqlite3.connect("sifono_db.db") as con:
             c = con.cursor()        
-            c.execute(query)
+            c.execute(query, args)
             scalar=c.fetchone()
             return scalar
     con.close()

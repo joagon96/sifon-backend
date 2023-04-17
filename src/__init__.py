@@ -1,86 +1,64 @@
-from flask import Flask, render_template, make_response, jsonify, request
+from flask import Flask, jsonify
+from flask_cors import CORS
+from flask_bcrypt import Bcrypt
+from flask_login import LoginManager, login_required
 from src.executeQuerys import querysView
-import sqlite3
+from src.Auth import *
 from src.Consultas import *
 from src.Altas import *
 from src.Modificaciones import *
 from src.Bajas import *
 from src.ReportesGeneral import *
-from flask_cors import CORS
-from Auth import auth
-# from passlib.apps import custom_app_context as pwd_context
-# from itsdangerous import (TimedJSONWebSignatureSerializer
-#                           as Serializer, BadSignature, SignatureExpired)
+
+login_manager = LoginManager()
+login_manager.session_protection = "strong"
+login_manager.login_view = "login"
+login_manager.login_message_category = "info"
+
+bcrypt = Bcrypt()
+
 app = Flask(__name__)
 CORS(app)
 app.register_blueprint(querysView)
-# #executeQuery('''INSERT INTO Cliente(nomape,domicilio,telefono) VALUES ("nano","mitre","345")''')
-# # executeQuery('''CREATE TABLE "Cliente" (
-# #  "idCliente" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-# #  "idZona" INTEGER,
-# #  "nomape" TEXT NOT NULL,
-# #  "domicilio" TEXT NOT NULL,
-# #  "telefono" INTEGER NOT NULL,
-# #  FOREIGN KEY("idZona") REFERENCES "Zona"("idZona")
-# # )''')
-
-security = auth.AuthBraska()
+app.secret_key = 'secret-key'
+login_manager.init_app(app)
+bcrypt.init_app(app)
 
 
 @app.route('/')
 @app.route('/index')
-@auth.require_api_token
-def index(userCurrent):
-    if userCurrent:
-        return jsonify({'nameUser' : userCurrent[1]})
-    else:
-        return make_response("Not logged")
-    return render_template('index.html')
 
-@app.route('/logout')
-def logout():
-    g.user = None
-    return ('Logout', 401)
+#AUTH
+@login_manager.user_loader
+def load_user(user_id):
+    return User.get(user_id)
 
-@app.route('/login')
+@app.route('/register', methods=['POST'])
+def register():
+    return Register()
+
+@app.route('/login', methods=['POST'])
 def login():
-    auth = request.authorization
-    
-    if not auth or not auth.username or not auth.password:
-        return make_response('No se puede verificar usuario', 401, {'WWW-Authenticate' : 'Basic realm="Login Required"'}) 
+    return Login()
 
-    # find user
-    with sqlite3.connect("sifono_db.db") as con:
-        c = con.cursor()
-        c.execute("SELECT * FROM Usuario WHERE usuario=?",(auth.username,))
-        idUser, nameUser, passUser = c.fetchone()
-    con.commit()
-    con.close()
-    
-    passUser = passUser.encode('ascii','ignore')
-    print(type(passUser), passUser.rstrip())
-    print(type(auth.password), auth.password)
-    
-    if not idUser:
-        return make_response('No se puede verificar usuario', 401, {'WWW-Authenticate' : 'Basic realm="Login Required"'})
-    
-    #if check_password_hash(user.password, auth.password):
-    if (passUser == auth.password):
-        token = security.encode(idUser)   
-        return jsonify({'token': token})
-    else:  
-        return make_response('No se puede verificar usuario', 401, {'WWW-Authenticate' : 'Basic realm="Bad password"'})
+@app.route('/logout', methods=['POST'])
+def logout():
+    return Logout()
+
+@app.route('/currentUser')
+@login_required
+def currentUser():
+    return CurrentUser()
+
 
 # GET
 @app.route('/get/<tableName>')
 def getTable(tableName):
     return GetTable(tableName)
 
-
 @app.route('/get/<tableName>/<idObject>')
 def getTablebyID(tableName, idObject):
     return GetTableByID(tableName, idObject)
-
 
 @app.route('/getH/Cliente')
 def getActiveClientes():
@@ -100,7 +78,6 @@ def postClient():
     altaCliente()
     return jsonify("Data OK")
 
-
 @app.route('/post/upRepartidor', methods=['GET', 'POST'])
 def postRepartidor():
     altaRepartidor()
@@ -116,7 +93,6 @@ def postReparto():
 def postLineaReparto():
     altaLineaReparto()
     return jsonify("Data OK")
-
 
 @app.route('/post/upZona', methods=['GET', 'POST'])
 def postZona():
@@ -134,12 +110,10 @@ def updateCliente():
     modCliente()
     return jsonify("Data OK")
 
-
 @app.route('/update/modRepartidor', methods=['PUT'])
 def updateRepartidor():
     modRepartidor()
     return jsonify("Data OK")
-
 
 @app.route('/update/modReparto', methods=['PUT'])
 def updateReparto():
@@ -151,11 +125,11 @@ def updateLineaReparto():
     modLineaReparto()
     return jsonify("Data OK")
 
-
 @app.route('/update/modZona', methods=['PUT'])
 def updateZona():
     modZona()
     return jsonify("Data OK")
+
 
 # BAJAS
 @app.route('/delete/delCliente', methods=['PUT'])
@@ -163,12 +137,10 @@ def delCliente():
     bajaCliente()
     return jsonify("Data OK")
 
-
 @app.route('/delete/delRepartidor', methods=['PUT'])
 def delRepartidor():
     bajaRepartidor()
     return jsonify("Data OK")
-
 
 @app.route('/delete/delReparto', methods=['PUT'])
 def delReparto():
@@ -195,6 +167,7 @@ def delLineaReparto():
     bajaLineaReparto()
     return jsonify("Data OK")
 
+
 # CONSULTAS ESPECIFICAS
 @app.route('/getH/ClienteZDesc')
 def ClienteHZDesc():
@@ -204,7 +177,6 @@ def ClienteHZDesc():
 def ClienteDZDesc():
     return ClienteDZDesc()
 
-
 @app.route('/get/ClienteZDesc/<idObject>')
 def ClienteZDescID(idObject):
     return ClienteZDescID()
@@ -212,7 +184,6 @@ def ClienteZDescID(idObject):
 @app.route('/get/ZonaxCliente/<idObject>')
 def ZonaxCliente(idObject):
     return ZonaxCliente()
-
 
 @app.route('/get/RepartoxLineaReparto/<idObject>')
 def RepartoxLineaReparto(idObject):
@@ -250,36 +221,31 @@ def RepartoHistorico(idObject):
 def RepartoFecha():
     return RepartoFecha()
 
+
 # REPORTES
 @app.route('/CantClientes')
 def CantCli():
     return jsonify(ContadorClientes())
 
-
 @app.route('/CantZonas')
 def CantZon():
     return jsonify(ContadorZonas())
-
 
 @app.route('/CantRepartidores')
 def CantRepartidor():
     return jsonify(ContadorRepartidores())
 
-
 @app.route('/CantRepartos')
 def CantRepartos():
     return jsonify(ContadorRepartos())
-
 
 @app.route('/CantBidones12')
 def CantBidones12():
     return jsonify(ContadorBidones12())
 
-
 @app.route('/CantBidones20')
 def CantBidones20():
     return jsonify(ContadorBidones20())
-
 
 @app.route('/CantSoda')
 def CantSoda():
