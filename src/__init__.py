@@ -1,7 +1,5 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
-from flask_bcrypt import Bcrypt
-from flask_login import LoginManager, login_required
 from src.executeQuerys import querysView
 from src.Auth import *
 from src.Consultas import *
@@ -10,29 +8,15 @@ from src.Modificaciones import *
 from src.Bajas import *
 from src.ReportesGeneral import *
 
-login_manager = LoginManager()
-login_manager.session_protection = "strong"
-login_manager.login_view = "login"
-login_manager.login_message_category = "info"
-
-bcrypt = Bcrypt()
-
 app = Flask(__name__)
 CORS(app)
 app.register_blueprint(querysView)
-app.secret_key = 'secret-key'
-login_manager.init_app(app)
-bcrypt.init_app(app)
 
 
 @app.route('/')
 @app.route('/index')
 
 #AUTH
-@login_manager.user_loader
-def load_user(user_id):
-    return User.get(user_id)
-
 @app.route('/register', methods=['POST'])
 def register():
     return Register()
@@ -41,12 +25,8 @@ def register():
 def login():
     return Login()
 
-@app.route('/logout', methods=['POST'])
-def logout():
-    return Logout()
-
 @app.route('/currentUser')
-@login_required
+@token_required
 def currentUser():
     return CurrentUser()
 
