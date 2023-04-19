@@ -1,9 +1,7 @@
 from flask import request
 from src.executeQuerys import executeQuery
 from datetime import datetime
-from flask_bcrypt import Bcrypt
-
-bcrypt = Bcrypt()
+from werkzeug.security import generate_password_hash
 
 def altaCliente():
     name = request.form.get('nombreApellido')       
@@ -18,7 +16,7 @@ def altaRepartidor():
     tel = request.form.get('telefono')
     hab = 1     
     executeQuery("INSERT INTO Repartidor(nomapeRep,telefonoRep,habilitadoRep) VALUES (?,?,?)",(name.capitalize(),tel,hab,))
-    executeQuery("INSERT INTO Usuario(usuario,password_hash, role) VALUES(?,?,?)",(name.capitalize(), bcrypt.generate_password_hash("repartidor"),"repartidor",))
+    executeQuery("INSERT INTO Usuario(usuario,password_hash, role) VALUES(?,?,?)",(name.capitalize(), generate_password_hash("repartidor", method='sha256'),"repartidor",))
 
 def altaReparto():     
     idr = request.form.get('idRepartidor')

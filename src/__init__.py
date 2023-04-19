@@ -33,6 +33,7 @@ def currentUser():
 
 # GET
 @app.route('/get/<tableName>')
+@token_required
 def getTable(tableName):
     return GetTable(tableName)
 
