@@ -2,12 +2,12 @@ from flask import request
 from src.executeQuerys import executeQuery
 
 def modCliente():
-        idCliente2 = request.form.get('idCliente')
-        name = request.form.get('nombreApellido')       
-        dom = request.form.get('domicilio')
-        tel = request.form.get('telefono')
-        idz = request.form.get('idZona')     
-        executeQuery("UPDATE Cliente SET idZona = ?, nomapeCli = ?, domicilio = ?, telefonoCli = ? WHERE idCliente = ?", (idz, name.capitalize(), dom.capitalize(), tel, idCliente2,) )
+    idCliente2 = request.form.get('idCliente')
+    name = request.form.get('nombreApellido')       
+    dom = request.form.get('domicilio')
+    tel = request.form.get('telefono')
+    idz = request.form.get('idZona')     
+    executeQuery("UPDATE Cliente SET idZona = ?, nomapeCli = ?, domicilio = ?, telefonoCli = ? WHERE idCliente = ?", (idz, name.capitalize(), dom.capitalize(), tel, idCliente2,) )
 
 def modRepartidor():
     idRepartidor2 = request.form.get('idRepartidor')

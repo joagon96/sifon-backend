@@ -13,6 +13,11 @@ def bajaRepartidor():
     executeQuery("UPDATE Repartidor SET habilitadoRep=? WHERE idRepartidor = ?", (hab,idRepartidor2,))
     executeQuery("DELETE FROM Usuario WHERE usuario=?", (data[0]['nomapeRep'],))
 
+def bajaZona():
+    idZona = request.form.get('idZona')            
+    hab = 0      
+    executeQuery("UPDATE Zona SET habilitado=? WHERE idZona = ?", (hab,idZona,) )
+
 def bajaReparto():
     idReparto2 = request.form.get('idReparto')            
     hab = 0      

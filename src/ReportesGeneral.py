@@ -1,16 +1,20 @@
 from src.executeQuerys import getQueryScalar, getQuerySum
 
 def ContadorClientes():
-    return getQueryScalar("SELECT COUNT(*) FROM Cliente")
+    hab = 1
+    return getQueryScalar("SELECT COUNT(*) FROM Cliente WHERE habilitadoC=?",(hab,))
 
-def ContadorZonas():       
-    return getQueryScalar("SELECT COUNT(*) FROM Zona")
+def ContadorZonas():
+    hab = 1       
+    return getQueryScalar("SELECT COUNT(*) FROM Zona WHERE habilitado=?",(hab,))
 
-def ContadorRepartidores():     
-    return getQueryScalar("SELECT COUNT(*) FROM Repartidor")
+def ContadorRepartidores():
+    hab = 1     
+    return getQueryScalar("SELECT COUNT(*) FROM Repartidor WHERE habilitadoRep=?", (hab,))
 
-def ContadorRepartos():      
-    return getQueryScalar("SELECT COUNT(*) FROM Reparto")
+def ContadorRepartos():
+    hab = 1      
+    return getQueryScalar("SELECT COUNT(*) FROM Reparto WHERE habilitadoReparto=?", (hab,))
 
 def ContadorBidones12():   
     return getQuerySum("SELECT com12 FROM Reparto")

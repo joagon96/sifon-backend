@@ -41,8 +41,9 @@ def altaLineaReparto():
     executeQuery("INSERT INTO LineaReparto(idCliente,idReparto,com12,com20,comSoda,pago,fiado,dev12,dev20,devSoda) VALUES (?,?,?,?,?,?,?,?,?,?)",(idc,idr,co12,co20,coms,pag,fia,de12,de20,deS,))
 
 def altaZona():
-    desc = request.form.get('descripcionZona')              
-    executeQuery("INSERT INTO Zona(descripcion) VALUES (?)",(desc.capitalize(),))
+    desc = request.form.get('descripcionZona')
+    hab = 1              
+    executeQuery("INSERT INTO Zona(descripcion, habilitado) VALUES (?,?)",(desc.capitalize(),hab,))
 
 def altaHistorico():
     idr = request.form.get('repartidor')   

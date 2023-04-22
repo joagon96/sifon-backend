@@ -10,6 +10,10 @@ def GetTableByID(tableName, idObject):
 def GetActiveClientes():
     hab = 1
     return jsonify(getQueryData("SELECT * FROM Cliente WHERE habilitadoC=?",(hab,)))
+
+def GetActiveZonas():
+    hab = 1
+    return jsonify(getQueryData("SELECT * FROM Zona WHERE habilitado=?",(hab,)))
      
 def GetActiveRepartos():
     hab = 1
@@ -56,11 +60,11 @@ def RepartoTotalxId(idObject):
     return jsonify(getQueryData("SELECT * FROM Reparto NATURAL JOIN Repartidor NATURAL JOIN Zona WHERE Reparto.idReparto=? ORDER BY Repartidor.nomapeRep ASC",(idObject,)))
 
 def ClientesFaltantes(idz,idr):
-    query = "SELECT * FROM Cliente NATURAL JOIN Zona WHERE Cliente.idZona=? ORDER BY Cliente.nomapeCli", (idz,)
+    query = "SELECT * FROM Cliente NATURAL JOIN Zona WHERE Cliente.habilitadoC = 1 AND Cliente.idZona=? ORDER BY Cliente.nomapeCli"
     aux = getQueryData("SELECT * FROM LineaReparto WHERE idReparto=?",(idr,))
     if (aux != []):       
-        query = "SELECT * FROM Cliente NATURAL JOIN Zona WHERE Cliente.idZona=? AND Cliente.idCliente NOT IN (SELECT idCliente FROM LineaReparto WHERE idReparto= "+str(idr)+" ) ORDER BY Cliente.nomapeCli ",(idz,) 
-    return jsonify(getQueryData(query))
+        query = "SELECT * FROM Cliente NATURAL JOIN Zona WHERE Cliente.habilitadoC = 1 AND Cliente.idZona=? AND Cliente.idCliente NOT IN (SELECT idCliente FROM LineaReparto WHERE idReparto= "+str(idr)+" ) ORDER BY Cliente.nomapeCli "
+    return jsonify(getQueryData(query, (idz,)))
 
 def RepartosRepartidor(idObject):
     hab = 1

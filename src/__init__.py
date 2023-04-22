@@ -45,6 +45,10 @@ def getTablebyID(tableName, idObject):
 def getActiveClientes():
     return GetActiveClientes()
 
+@app.route('/getH/Zona')
+def getActiveZonas():
+    return GetActiveZonas()
+
 @app.route('/getH/Reparto')
 def getActiveRepartos():
     return GetActiveRepartos()
@@ -118,6 +122,11 @@ def delCliente():
     bajaCliente()
     return jsonify("Data OK")
 
+@app.route('/delete/delZona', methods=['PUT'])
+def delZona():
+    bajaZona()
+    return jsonify("Data OK")
+
 @app.route('/delete/delRepartidor', methods=['PUT'])
 def delRepartidor():
     bajaRepartidor()
@@ -151,55 +160,55 @@ def delLineaReparto():
 
 # CONSULTAS ESPECIFICAS
 @app.route('/getH/ClienteZDesc')
-def ClienteHZDesc():
-    return ClienteDZDesc()
+def clienteHZDesc():
+    return ClienteHZDesc()
 
 @app.route('/getD/ClienteZDesc')
-def ClienteDZDesc():
+def clienteDZDesc():
     return ClienteDZDesc()
 
 @app.route('/get/ClienteZDesc/<idObject>')
-def ClienteZDescID(idObject):
-    return ClienteZDescID()
+def clienteZDescID(idObject):
+    return ClienteZDescID(idObject)
 
 @app.route('/get/ZonaxCliente/<idObject>')
-def ZonaxCliente(idObject):
-    return ZonaxCliente()
+def zonaxCliente(idObject):
+    return ZonaxCliente(idObject)
 
 @app.route('/get/RepartoxLineaReparto/<idObject>')
-def RepartoxLineaReparto(idObject):
-    return RepartoxLineaReparto()
+def repartoxLineaReparto(idObject):
+    return RepartoxLineaReparto(idObject)
 
 @app.route('/getH/RepartoTotal')
-def RepartohTotal():
+def repartohTotal():
     return RepartohTotal()
 
 @app.route('/getD/RepartoTotal')
-def RepartoDTotal():
+def repartoDTotal():
     return RepartoDTotal()
 
 @app.route('/get/LineasRepartoCliente/<idCliente>')
-def LineasRepartoCliente(idCliente):
+def lineasRepartoCliente(idCliente):
     return LineasRepartoCliente()
 
 @app.route('/get/RepartoTotal/<idObject>')
-def RepartoTotalxId(idObject):
+def repartoTotalxId(idObject):
    return RepartoTotalxId
 
 @app.route('/get/ClientesFaltantes/<idz>/<idr>')
-def ClientesFaltantes(idz,idr):
-    return ClientesFaltantes()
+def clientesFaltantes(idz,idr):
+    return ClientesFaltantes(idz, idr)
 
 @app.route('/get/RepartosRepartidor/<idObject>')
-def RepartosRepartidor(idObject):
+def repartosRepartidor(idObject):
     return RepartosRepartidor
 
 @app.route('/get/RepartoHistoricoLinea/<idObject>')
-def RepartoHistorico(idObject):
+def repartoHistorico(idObject):
     return RepartoHistorico()
 
 @app.route('/get/RepartoHistorico')
-def RepartoFecha():
+def repartoFecha():
     return RepartoFecha()
 
 
