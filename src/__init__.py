@@ -187,13 +187,17 @@ def repartohTotal():
 def repartoDTotal():
     return RepartoDTotal()
 
+@app.route('/get/LineaRepartoTotal/<idObject>')
+def lineaRepartoTotal(idObject):
+    return LineaRepartoTotal(idObject)
+
 @app.route('/get/LineasRepartoCliente/<idCliente>')
 def lineasRepartoCliente(idCliente):
     return LineasRepartoCliente()
 
 @app.route('/get/RepartoTotal/<idObject>')
 def repartoTotalxId(idObject):
-   return RepartoTotalxId
+   return RepartoTotalxId(idObject)
 
 @app.route('/get/ClientesFaltantes/<idz>/<idr>')
 def clientesFaltantes(idz,idr):

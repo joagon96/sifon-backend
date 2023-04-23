@@ -30,15 +30,18 @@ def altaReparto():
 def altaLineaReparto():
     idc = request.form.get('idCliente')       
     idr = request.form.get('idReparto')
-    co12 = request.form.get('com12')
-    co20 = request.form.get('com20')
-    coms = request.form.get('comSoda')
+    est12 = request.form.get('est12')
+    est20 = request.form.get('est20')
+    estSoda = request.form.get('estSoda')
+    co12 = 0
+    co20 = 0
+    coms = 0
     pag = 0
     fia = 0
     de12 = 0
     de20 = 0
     deS = 0
-    executeQuery("INSERT INTO LineaReparto(idCliente,idReparto,com12,com20,comSoda,pago,fiado,dev12,dev20,devSoda) VALUES (?,?,?,?,?,?,?,?,?,?)",(idc,idr,co12,co20,coms,pag,fia,de12,de20,deS,))
+    executeQuery("INSERT INTO LineaReparto(idCliente,idReparto,est12,est20,estSoda,com12,com20,comSoda,pago,fiado,dev12,dev20,devSoda) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",(idc,idr,est12,est20,estSoda,co12,co20,coms,pag,fia,de12,de20,deS,))
 
 def altaZona():
     desc = request.form.get('descripcionZona')

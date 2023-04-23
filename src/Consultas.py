@@ -75,3 +75,6 @@ def RepartoHistorico(idObject):
 
 def RepartoFecha():
         return jsonify(getQueryData("SELECT * FROM Historico NATURAL JOIN Reparto NATURAL JOIN Zona NATURAL JOIN Repartidor WHERE Historico.idReparto=Reparto.idReparto"))
+
+def LineaRepartoTotal(idObject):
+    return jsonify(getQueryData("SELECT * FROM LineaReparto NATURAL JOIN Cliente WHERE LineaReparto.idLR=? ", (idObject,)))

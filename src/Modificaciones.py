@@ -19,13 +19,17 @@ def modReparto():
     idReparto2 = request.form.get('idReparto')       
     idr = request.form.get('idRepartidor')
     dia = request.form.get('dia')
-    idz = request.form.get('zona')       
-    executeQuery("UPDATE Reparto SET idZona = ?, idRepartidor = ?, dia= ? WHERE idReparto = ?", (idz,idr,dia,idReparto2,) )
+    idz = request.form.get('idZona')   
+    estado = request.form.get('estado')    
+    executeQuery("UPDATE Reparto SET idZona = ?, idRepartidor = ?, dia= ?, estado = ? WHERE idReparto = ?", (idz,idr,dia,estado,idReparto2,) )
       
 def modLineaReparto():
-    idlr = request.form.get('idLineaReparto')
+    idlr = request.form.get('idLR')
     idc = request.form.get('idCliente')
-    idr = request.form.get('idReparto')       
+    idr = request.form.get('idReparto')
+    est12 = request.form.get('est12')
+    est20 = request.form.get('est20')
+    estSoda = request.form.get('estSoda')       
     com12 = request.form.get('com12')
     com20 = request.form.get('com20')
     comSoda = request.form.get('comSoda')
@@ -33,8 +37,9 @@ def modLineaReparto():
     fiado = request.form.get('fiado')
     dev12 = request.form.get('dev12')
     dev20 = request.form.get('dev20')
-    devSoda = request.form.get('devSoda')      
-    executeQuery("UPDATE Reparto SET idCliente = ?, idReparto = ?, com12= ?, com20= ?, comSoda= ?, pago= ?, fiado= ?, dev12= ?, dev20= ? , devSoda= ?  WHERE idReparto = ?", (idc,idr,com12,com20,comSoda,pago,fiado,dev12,dev20,devSoda,idlr,))
+    devSoda = request.form.get('devSoda')
+    observacion = request.form.get('observacion')      
+    executeQuery("UPDATE LineaReparto SET idCliente = ?, idReparto = ?, est12= ?, est20= ?, estSoda= ?, com12= ?, com20= ?, comSoda= ?, pago= ?, fiado= ?, dev12= ?, dev20= ? , devSoda= ?, observacion =?  WHERE idLR = ?", (idc,idr,est12,est20,estSoda,com12,com20,comSoda,pago,fiado,dev12,dev20,devSoda,observacion,idlr,))
 
 def modZona():
     idZona2 = request.form.get('idZona')
