@@ -215,6 +215,11 @@ def repartoHistorico(idObject):
 def repartoFecha():
     return RepartoFecha()
 
+@app.route('/finalizar/reparto/<idReparto>', methods=['PUT'])
+def finReparto(idReparto):
+    FinalizarReparto(idReparto)
+    return jsonify("Data OK")
+
 
 # REPORTES
 @app.route('/CantClientes')

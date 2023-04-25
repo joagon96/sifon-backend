@@ -71,10 +71,10 @@ def RepartosRepartidor(idObject):
     return jsonify(getQueryData("SELECT * FROM Reparto NATURAL JOIN Repartidor NATURAL JOIN Zona WHERE Repartidor.idRepartidor=? AND Reparto.habilitadoReparto=?",(idObject,hab,)))
 
 def RepartoHistorico(idObject):
-        return jsonify(getQueryData("SELECT * FROM Historico NATURAL JOIN Reparto NATURAL JOIN LineaReparto WHERE LineaReparto.idLineaReparto=?",(idObject,)))
+    return jsonify(getQueryData("SELECT * FROM Historico NATURAL JOIN Reparto NATURAL JOIN LineaReparto WHERE LineaReparto.idLineaReparto=?",(idObject,)))
 
 def RepartoFecha():
-        return jsonify(getQueryData("SELECT * FROM Historico NATURAL JOIN Reparto NATURAL JOIN Zona NATURAL JOIN Repartidor WHERE Historico.idReparto=Reparto.idReparto"))
+    return jsonify(getQueryData("SELECT * FROM Historico NATURAL JOIN Reparto NATURAL JOIN Zona NATURAL JOIN Repartidor WHERE Historico.idReparto=Reparto.idReparto"))
 
 def LineaRepartoTotal(idObject):
     return jsonify(getQueryData("SELECT * FROM LineaReparto NATURAL JOIN Cliente WHERE LineaReparto.idLR=? ", (idObject,)))

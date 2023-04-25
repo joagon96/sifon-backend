@@ -9,7 +9,7 @@ def executeQuery(query, args):
         c.execute(query, args)
         con.commit()
     con.close() 
-    return "OK"
+    return c.lastrowid
 
 def getQueryData(query, args=""):
     queryData = []

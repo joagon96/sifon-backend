@@ -22,10 +22,8 @@ def altaReparto():
     idr = request.form.get('idRepartidor')
     dia = request.form.get('dia')
     idz = request.form.get('idZona')
-    hab = 1
-    estado = 'pendiente'
-    fechaCreacion = datetime.now()       
-    executeQuery("INSERT INTO Reparto(idRepartidor,dia,habilitadoReparto,idZona,estado,fechaCreacion) VALUES (?,?,?,?,?,?)",(idr,dia,hab,idz,estado,fechaCreacion))
+    hab = 1  
+    executeQuery("INSERT INTO Reparto(idRepartidor,dia,habilitadoReparto,idZona) VALUES (?,?,?,?)",(idr,dia,hab,idz))
 
 def altaLineaReparto():
     idc = request.form.get('idCliente')       

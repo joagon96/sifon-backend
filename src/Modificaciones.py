@@ -1,5 +1,6 @@
 from flask import request
-from src.executeQuerys import executeQuery
+from src.executeQuerys import executeQuery, getQueryData
+from datetime import datetime
 
 def modCliente():
     idCliente2 = request.form.get('idCliente')
@@ -20,8 +21,7 @@ def modReparto():
     idr = request.form.get('idRepartidor')
     dia = request.form.get('dia')
     idz = request.form.get('idZona')   
-    estado = request.form.get('estado')    
-    executeQuery("UPDATE Reparto SET idZona = ?, idRepartidor = ?, dia= ?, estado = ? WHERE idReparto = ?", (idz,idr,dia,estado,idReparto2,) )
+    executeQuery("UPDATE Reparto SET idZona = ?, idRepartidor = ?, dia= ? WHERE idReparto = ?", (idz,idr,dia,idReparto2,) )
       
 def modLineaReparto():
     idlr = request.form.get('idLR')
@@ -46,3 +46,28 @@ def modZona():
     descripcion = request.form.get('descripcion')             
     executeQuery("UPDATE Zona SET descripcion = ? WHERE idZona = ?", (descripcion.capitalize(),idZona2,) )
     
+def FinalizarReparto(idReparto):
+    lineasReparto = getQueryData("SELECT * FROM Reparto NATURAL JOIN LineaReparto NATURAL JOIN Cliente NATURAL JOIN Repartidor NATURAL JOIN Zona WHERE Reparto.idReparto=? ", (idReparto,))
+    fecha = datetime.now()       
+    idh = executeQuery("INSERT INTO Historico(fecha,repartidor,zona,dia) VALUES (?,?,?,?)",(
+        fecha,
+        lineasReparto[0]['nomapeRep'],
+        lineasReparto[0]['dia'],
+        lineasReparto[0]['descripcion'],
+        ))
+    for linea in lineasReparto:
+        executeQuery("INSERT INTO HistoricoLinea(idHistorico,cliente,domicilio,com12,com20,comSoda,pago,fiado,dev12,dev20,devSoda,observacion) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",(
+            idh,
+            linea['nomapeCli'],
+            linea['domicilio'],
+            linea['com12'],
+            linea['com20'],
+            linea['comSoda'],
+            linea['pago'],
+            linea['fiado'],
+            linea['dev12'],
+            linea['dev20'],
+            linea['devSoda'],
+            linea['observacion'],
+            ))
+    executeQuery("UPDATE LineaReparto SET com12= ?, com20= ?, comSoda= ?, pago= ?, fiado= ?, dev12= ?, dev20= ? , devSoda= ?, observacion =?  WHERE idReparto = ?", (0,0,0,0,0,0,0,0,"",idReparto,))
