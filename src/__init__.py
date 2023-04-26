@@ -115,6 +115,11 @@ def updateZona():
     modZona()
     return jsonify("Data OK")
 
+@app.route('/finalizar/reparto/<idReparto>', methods=['PUT'])
+def finReparto(idReparto):
+    FinalizarReparto(idReparto)
+    return jsonify("Data OK")
+
 
 # BAJAS
 @app.route('/delete/delCliente', methods=['PUT'])
@@ -215,10 +220,9 @@ def repartoHistorico(idObject):
 def repartoFecha():
     return RepartoFecha()
 
-@app.route('/finalizar/reparto/<idReparto>', methods=['PUT'])
-def finReparto(idReparto):
-    FinalizarReparto(idReparto)
-    return jsonify("Data OK")
+@app.route('/historico/lineas/<idHistorico>')
+def historicoLineaReparto(idHistorico):
+    return HistoricoLineaReparto(idHistorico)
 
 
 # REPORTES

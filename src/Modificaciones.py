@@ -38,7 +38,7 @@ def modLineaReparto():
     dev12 = request.form.get('dev12')
     dev20 = request.form.get('dev20')
     devSoda = request.form.get('devSoda')
-    observacion = request.form.get('observacion')      
+    observacion = str(request.form.get('observacion'))
     executeQuery("UPDATE LineaReparto SET idCliente = ?, idReparto = ?, est12= ?, est20= ?, estSoda= ?, com12= ?, com20= ?, comSoda= ?, pago= ?, fiado= ?, dev12= ?, dev20= ? , devSoda= ?, observacion =?  WHERE idLR = ?", (idc,idr,est12,est20,estSoda,com12,com20,comSoda,pago,fiado,dev12,dev20,devSoda,observacion,idlr,))
 
 def modZona():
