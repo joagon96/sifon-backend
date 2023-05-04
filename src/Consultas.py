@@ -1,4 +1,4 @@
-from flask import jsonify
+from flask import jsonify, request
 from src.executeQuerys import getQueryData
 
 def GetTable(tableName):
@@ -81,3 +81,31 @@ def RepartoFecha():
 
 def LineaRepartoTotal(idObject):
     return jsonify(getQueryData("SELECT * FROM LineaReparto NATURAL JOIN Cliente WHERE LineaReparto.idLR=? ", (idObject,)))
+
+def BuscarHistorico():
+    zona = request.form.get('zona')       
+    dia = request.form.get('dia')
+    repartidor = request.form.get('repartidor')
+    fecha = request.form.get('fecha')
+    params = []
+    values = []
+    query = "SELECT * FROM Historico "
+    if (zona):
+        params.append("zona = ?")
+        values.append(zona)
+    if (dia):
+        params.append("dia = ?")
+        values.append(dia)
+    if (repartidor):
+        params.append("repartidor = ?")
+        values.append(repartidor)
+    if (fecha):
+        params.append("fecha = ?")
+        values.append(fecha)
+    if (len(params) > 0 and len(values) > 0):
+        separator = " AND "
+        query += "WHERE " + separator.join(params)
+
+    query += " ORDER BY idHistorico DESC"
+    return jsonify(getQueryData(query, values))
+

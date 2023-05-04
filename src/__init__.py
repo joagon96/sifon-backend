@@ -224,6 +224,10 @@ def repartoFecha():
 def historicoLineaReparto(idHistorico):
     return HistoricoLineaReparto(idHistorico)
 
+@app.route('/search/historico', methods=['POST'])
+def buscarHistorico():
+    return BuscarHistorico()
+
 
 # REPORTES
 @app.route('/CantClientes')
@@ -253,3 +257,15 @@ def CantBidones20():
 @app.route('/CantSoda')
 def CantSoda():
     return jsonify(ContadorSoda())
+
+@app.route('/CantPago')
+def contadorPagos():
+    return jsonify(ContadorPagos())
+
+@app.route('/CantFiado')
+def contadorFiados():
+    return jsonify(ContadorFiados())
+
+@app.route('/CantHistorico')
+def contadorHistoricps():
+    return jsonify(ContadorHistoricos())

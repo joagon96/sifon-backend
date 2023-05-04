@@ -48,12 +48,12 @@ def modZona():
     
 def FinalizarReparto(idReparto):
     lineasReparto = getQueryData("SELECT * FROM Reparto NATURAL JOIN LineaReparto NATURAL JOIN Cliente NATURAL JOIN Repartidor NATURAL JOIN Zona WHERE Reparto.idReparto=? ", (idReparto,))
-    fecha = datetime.now()       
+    fecha = datetime.now().strftime("%Y-%m-%d")       
     idh = executeQuery("INSERT INTO Historico(fecha,repartidor,zona,dia) VALUES (?,?,?,?)",(
         fecha,
         lineasReparto[0]['nomapeRep'],
-        lineasReparto[0]['dia'],
         lineasReparto[0]['descripcion'],
+        lineasReparto[0]['dia'],
         ))
     for linea in lineasReparto:
         executeQuery("INSERT INTO HistoricoLinea(idHistorico,cliente,domicilio,com12,com20,comSoda,pago,fiado,dev12,dev20,devSoda,observacion) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",(

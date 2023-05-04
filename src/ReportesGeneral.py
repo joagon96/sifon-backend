@@ -16,11 +16,23 @@ def ContadorRepartos():
     hab = 1      
     return getQueryScalar("SELECT COUNT(*) FROM Reparto WHERE habilitadoReparto=?", (hab,))
 
+
+def ContadorHistoricos():
+    return getQueryScalar("SELECT COUNT(*) FROM Historico")
+
 def ContadorBidones12():   
-    return getQuerySum("SELECT com12 FROM Reparto")
+    return getQueryScalar("SELECT SUM(com12) FROM HistoricoLinea")
 
 def ContadorBidones20():
-    return getQuerySum("SELECT com20 FROM Reparto")
+    return getQueryScalar("SELECT SUM(com20) FROM HistoricoLinea")
 
 def ContadorSoda():
-    return getQuerySum("SELECT comSoda FROM Reparto")
+    return getQueryScalar("SELECT SUM(comSoda) FROM HistoricoLinea")
+
+def ContadorPagos():
+    return getQueryScalar("SELECT SUM(pago) FROM HistoricoLinea")
+
+def ContadorFiados():
+    return getQueryScalar("SELECT SUM(fiado) FROM HistoricoLinea")
+
+
