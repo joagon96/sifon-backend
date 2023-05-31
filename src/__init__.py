@@ -95,6 +95,11 @@ def updateCliente():
     modCliente()
     return jsonify("Data OK")
 
+@app.route('/update/deuda', methods=['PUT'])
+def updateDeuda():
+    modDeuda()
+    return jsonify("Data OK")
+
 @app.route('/update/modRepartidor', methods=['PUT'])
 def updateRepartidor():
     modRepartidor()

@@ -1,14 +1,24 @@
 from flask import request
-from src.executeQuerys import executeQuery, getQueryData
+from src.executeQuerys import executeQuery, getQueryData, getQueryScalar
 from datetime import datetime
 
 def modCliente():
-    idCliente2 = request.form.get('idCliente')
+    idCliente = request.form.get('idCliente')
     name = request.form.get('nombreApellido')       
     dom = request.form.get('domicilio')
     tel = request.form.get('telefono')
     idz = request.form.get('idZona')     
-    executeQuery("UPDATE Cliente SET idZona = ?, nomapeCli = ?, domicilio = ?, telefonoCli = ? WHERE idCliente = ?", (idz, name.capitalize(), dom.capitalize(), tel, idCliente2,) )
+    executeQuery("UPDATE Cliente SET idZona = ?, nomapeCli = ?, domicilio = ?, telefonoCli = ? WHERE idCliente = ?", (idz, name.capitalize(), dom.capitalize(), tel, idCliente,))
+
+def modDeuda():
+    idCliente = request.form.get('idCliente')
+    pagado = request.form.get('pagado')
+    deudaActual = getQueryScalar("SELECT deuda FROM Cliente WHERE idCliente = ?", (idCliente,)) 
+    deuda = deudaActual[0] - int(pagado)
+    if (deuda < 0):
+        deuda = 0
+    executeQuery("UPDATE Cliente SET deuda = ? WHERE idCliente = ?", (deuda, idCliente,) )
+
 
 def modRepartidor():
     idRepartidor2 = request.form.get('idRepartidor')
@@ -56,6 +66,9 @@ def FinalizarReparto(idReparto):
         lineasReparto[0]['dia'],
         ))
     for linea in lineasReparto:
+        if (linea['fiado'] > 0):
+            deudaTotal = linea['deuda'] + linea['fiado']
+            executeQuery("UPDATE Cliente SET deuda = ? WHERE idCliente = ?", (deudaTotal, linea['idCliente']))
         executeQuery("INSERT INTO HistoricoLinea(idHistorico,cliente,domicilio,com12,com20,comSoda,pago,fiado,dev12,dev20,devSoda,observacion) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",(
             idh,
             linea['nomapeCli'],
