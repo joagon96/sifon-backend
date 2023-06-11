@@ -109,3 +109,8 @@ def BuscarHistorico():
     query += " ORDER BY idHistorico DESC"
     return jsonify(getQueryData(query, values))
 
+def ResumenReparto(idReparto):
+    return jsonify(getQueryData("SELECT nomapeRep, SUM(dev12) dev12, SUM(dev20) dev20, SUM(devSoda) devSoda, SUM(com12) com12,SUM(com20) com20, SUM(comSoda) comSoda, SUM(pago) pago, SUM(fiado)fiado FROM LineaReparto NATURAL JOIN Reparto NATURAL JOIN Repartidor WHERE idReparto = ?", (idReparto,)))
+
+def ResumenHistorico(idHistorico):
+    return jsonify(getQueryData("SELECT repartidor, SUM(dev12) dev12, SUM(dev20) dev20, SUM(devSoda) devSoda, SUM(com12) com12,SUM(com20) com20, SUM(comSoda) comSoda, SUM(pago) pago, SUM(fiado)fiado FROM HistoricoLinea NATURAL JOIN Historico WHERE idHistorico = ?", (idHistorico,)))

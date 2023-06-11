@@ -233,6 +233,14 @@ def historicoLineaReparto(idHistorico):
 def buscarHistorico():
     return BuscarHistorico()
 
+@app.route('/resumen/reparto/<idReparto>', methods=['GET'])
+def resumenReparto(idReparto):
+    return ResumenReparto(idReparto)
+
+@app.route('/resumen/historico/<idHistorico>', methods=['GET'])
+def resumenHistorico(idHistorico):
+    return ResumenHistorico(idHistorico)
+
 
 # REPORTES
 @app.route('/CantClientes')
