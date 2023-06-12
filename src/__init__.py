@@ -203,7 +203,7 @@ def lineaRepartoTotal(idObject):
 
 @app.route('/get/LineasRepartoCliente/<idCliente>')
 def lineasRepartoCliente(idCliente):
-    return LineasRepartoCliente()
+    return LineasRepartoCliente(idCliente)
 
 @app.route('/get/RepartoTotal/<idObject>')
 def repartoTotalxId(idObject):
@@ -219,7 +219,7 @@ def repartosRepartidor(idObject):
 
 @app.route('/get/RepartoHistoricoLinea/<idObject>')
 def repartoHistorico(idObject):
-    return RepartoHistorico()
+    return RepartoHistorico(idObject)
 
 @app.route('/get/RepartoHistorico')
 def repartoFecha():

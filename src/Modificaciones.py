@@ -2,44 +2,53 @@ from flask import request
 from src.executeQuerys import executeQuery, getQueryData, getQueryScalar
 from datetime import datetime
 
+
 def modCliente():
     idCliente = request.form.get('idCliente')
-    name = request.form.get('nombreApellido')       
+    name = request.form.get('nombreApellido')
     dom = request.form.get('domicilio')
     tel = request.form.get('telefono')
-    idz = request.form.get('idZona')     
-    executeQuery("UPDATE Cliente SET idZona = ?, nomapeCli = ?, domicilio = ?, telefonoCli = ? WHERE idCliente = ?", (idz, name.capitalize(), dom.capitalize(), tel, idCliente,))
+    idz = request.form.get('idZona')
+    executeQuery("UPDATE Cliente SET idZona = ?, nomapeCli = ?, domicilio = ?, telefonoCli = ? WHERE idCliente = ?",
+                 (idz, name.capitalize(), dom.capitalize(), tel, idCliente,))
+
 
 def modDeuda():
     idCliente = request.form.get('idCliente')
     pagado = request.form.get('pagado')
-    deudaActual = getQueryScalar("SELECT deuda FROM Cliente WHERE idCliente = ?", (idCliente,)) 
+    deudaActual = getQueryScalar(
+        "SELECT deuda FROM Cliente WHERE idCliente = ?", (idCliente,))
     deuda = deudaActual[0] - int(pagado)
-    if (deuda < 0):
+    if deuda < 0:
         deuda = 0
-    executeQuery("UPDATE Cliente SET deuda = ? WHERE idCliente = ?", (deuda, idCliente,) )
+    executeQuery("UPDATE Cliente SET deuda = ? WHERE idCliente = ?",
+                 (deuda, idCliente,))
 
 
 def modRepartidor():
     idRepartidor2 = request.form.get('idRepartidor')
-    name = request.form.get('nombreApellido')       
-    tel = request.form.get('telefono')       
-    executeQuery("UPDATE Repartidor SET nomapeRep = ?, telefonoRep = ? WHERE idRepartidor = ?", (name.capitalize(),tel.capitalize(),idRepartidor2,) )
+    name = request.form.get('nombreApellido')
+    tel = request.form.get('telefono')
+    executeQuery("UPDATE Repartidor SET nomapeRep = ?, telefonoRep = ? WHERE idRepartidor = ?",
+                 (name.capitalize(), tel.capitalize(), idRepartidor2,))
+
 
 def modReparto():
-    idReparto2 = request.form.get('idReparto')       
+    idReparto2 = request.form.get('idReparto')
     idr = request.form.get('idRepartidor')
     dia = request.form.get('dia')
-    idz = request.form.get('idZona')   
-    executeQuery("UPDATE Reparto SET idZona = ?, idRepartidor = ?, dia= ? WHERE idReparto = ?", (idz,idr,dia,idReparto2,) )
-      
+    idz = request.form.get('idZona')
+    executeQuery("UPDATE Reparto SET idZona = ?, idRepartidor = ?, dia= ? WHERE idReparto = ?",
+                 (idz, idr, dia, idReparto2,))
+
+
 def modLineaReparto():
     idlr = request.form.get('idLR')
     idc = request.form.get('idCliente')
     idr = request.form.get('idReparto')
     est12 = request.form.get('est12')
     est20 = request.form.get('est20')
-    estSoda = request.form.get('estSoda')       
+    estSoda = request.form.get('estSoda')
     com12 = request.form.get('com12')
     com20 = request.form.get('com20')
     comSoda = request.form.get('comSoda')
@@ -49,27 +58,33 @@ def modLineaReparto():
     dev20 = request.form.get('dev20')
     devSoda = request.form.get('devSoda')
     observacion = str(request.form.get('observacion'))
-    executeQuery("UPDATE LineaReparto SET idCliente = ?, idReparto = ?, est12= ?, est20= ?, estSoda= ?, com12= ?, com20= ?, comSoda= ?, pago= ?, fiado= ?, dev12= ?, dev20= ? , devSoda= ?, observacion =?  WHERE idLR = ?", (idc,idr,est12,est20,estSoda,com12,com20,comSoda,pago,fiado,dev12,dev20,devSoda,observacion,idlr,))
+    executeQuery("UPDATE LineaReparto SET idCliente = ?, idReparto = ?, est12= ?, est20= ?, estSoda= ?, com12= ?, com20= ?, comSoda= ?, pago= ?, fiado= ?, dev12= ?, dev20= ? , devSoda= ?, observacion =?  WHERE idLR = ?",
+                 (idc, idr, est12, est20, estSoda, com12, com20, comSoda, pago, fiado, dev12, dev20, devSoda, observacion, idlr,))
+
 
 def modZona():
     idZona2 = request.form.get('idZona')
-    descripcion = request.form.get('descripcion')             
-    executeQuery("UPDATE Zona SET descripcion = ? WHERE idZona = ?", (descripcion.capitalize(),idZona2,) )
-    
+    descripcion = request.form.get('descripcion')
+    executeQuery("UPDATE Zona SET descripcion = ? WHERE idZona = ?",
+                 (descripcion.capitalize(), idZona2,))
+
+
 def FinalizarReparto(idReparto):
-    lineasReparto = getQueryData("SELECT * FROM Reparto NATURAL JOIN LineaReparto NATURAL JOIN Cliente NATURAL JOIN Repartidor NATURAL JOIN Zona WHERE Reparto.idReparto=? ", (idReparto,))
-    fecha = datetime.now().strftime("%Y-%m-%d")       
-    idh = executeQuery("INSERT INTO Historico(fecha,repartidor,zona,dia) VALUES (?,?,?,?)",(
+    lineasReparto = getQueryData(
+        "SELECT * FROM Reparto NATURAL JOIN LineaReparto NATURAL JOIN Cliente NATURAL JOIN Repartidor NATURAL JOIN Zona WHERE Reparto.idReparto=? ", (idReparto,))
+    fecha = datetime.now().strftime("%Y-%m-%d")
+    idh = executeQuery("INSERT INTO Historico(fecha,repartidor,zona,dia) VALUES (?,?,?,?)", (
         fecha,
         lineasReparto[0]['nomapeRep'],
         lineasReparto[0]['descripcion'],
         lineasReparto[0]['dia'],
-        ))
+    ))
     for linea in lineasReparto:
-        if (linea['fiado'] > 0):
+        if linea['fiado'] > 0:
             deudaTotal = linea['deuda'] + linea['fiado']
-            executeQuery("UPDATE Cliente SET deuda = ? WHERE idCliente = ?", (deudaTotal, linea['idCliente']))
-        executeQuery("INSERT INTO HistoricoLinea(idHistorico,cliente,domicilio,com12,com20,comSoda,pago,fiado,dev12,dev20,devSoda,observacion) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",(
+            executeQuery("UPDATE Cliente SET deuda = ? WHERE idCliente = ?",
+                         (deudaTotal, linea['idCliente']))
+        executeQuery("INSERT INTO HistoricoLinea(idHistorico,cliente,domicilio,com12,com20,comSoda,pago,fiado,dev12,dev20,devSoda,observacion) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", (
             idh,
             linea['nomapeCli'],
             linea['domicilio'],
@@ -82,5 +97,6 @@ def FinalizarReparto(idReparto):
             linea['dev20'],
             linea['devSoda'],
             linea['observacion'],
-            ))
-    executeQuery("UPDATE LineaReparto SET com12= ?, com20= ?, comSoda= ?, pago= ?, fiado= ?, dev12= ?, dev20= ? , devSoda= ?, observacion =?  WHERE idReparto = ?", (0,0,0,0,0,0,0,0,"",idReparto,))
+        ))
+    executeQuery("UPDATE LineaReparto SET com12= ?, com20= ?, comSoda= ?, pago= ?, fiado= ?, dev12= ?, dev20= ? , devSoda= ?, observacion =?  WHERE idReparto = ?",
+                 (0, 0, 0, 0, 0, 0, 0, 0, "", idReparto,))

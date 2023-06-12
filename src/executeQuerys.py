@@ -3,13 +3,15 @@ import sqlite3
 
 querysView = Blueprint('querysView', __name__, template_folder='templates')
 
+
 def executeQuery(query, args):
     with sqlite3.connect("sifono_db.db") as con:
         c = con.cursor()
         c.execute(query, args)
         con.commit()
-    con.close() 
+    con.close()
     return c.lastrowid
+
 
 def getQueryData(query, args=""):
     queryData = []
@@ -26,6 +28,7 @@ def getQueryData(query, args=""):
 
     return queryData
 
+
 def getSingleQueryData(query, args=()):
     with sqlite3.connect("sifono_db.db") as con:
         c = con.cursor()
@@ -34,35 +37,35 @@ def getSingleQueryData(query, args=()):
         c.close()
         return rv[0][0]
 
-def getQueryScalar(query, args =""):
+
+def getQueryScalar(query, args=""):
     with sqlite3.connect("sifono_db.db") as con:
-            c = con.cursor()        
-            c.execute(query, args)
-            scalar=c.fetchone()
-            return scalar
-    con.close()
+        c = con.cursor()
+        c.execute(query, args)
+        scalar = c.fetchone()
+        return scalar
+
 
 def getQuerySum(query):
     with sqlite3.connect("sifono_db.db") as con:
-            c = con.cursor()        
-            c.execute(query)
-            cantidad=c.fetchall()
-            suma=0
-            for i in cantidad:
-                for j in i:
-                    suma = suma + j 
-            return suma
-            con.close()
+        c = con.cursor()
+        c.execute(query)
+        cantidad = c.fetchall()
+        suma = 0
+        for i in cantidad:
+            for j in i:
+                suma = suma + j
+        return suma
 
 
-#c = conn.cursor()
+# c = conn.cursor()
 # Create table
-#c.execute('''CREATE TABLE stocks
+# c.execute('''CREATE TABLE stocks
 #             (date text, trans text, symbol text, qty real, price real)''')
 # Insert a row of data
-#c.execute("INSERT INTO stocks VALUES ('2006-01-05','BUY','RHAT',100,35.14)")
+# c.execute("INSERT INTO stocks VALUES ('2006-01-05','BUY','RHAT',100,35.14)")
 # Save (commit) the changes
-#conn.commit()
+# conn.commit()
 # We can also close the connection if we are done with it.
 # Just be sure any changes have been committed or they will be lost.
-#conn.close()
+# conn.close()
