@@ -100,6 +100,11 @@ def updateDeuda():
     modDeuda()
     return jsonify("Data OK")
 
+@app.route('/update/producto', methods=['PUT'])
+def updateProducto():
+    modProducto()
+    return jsonify("Data OK")
+
 @app.route('/update/modRepartidor', methods=['PUT'])
 def updateRepartidor():
     modRepartidor()

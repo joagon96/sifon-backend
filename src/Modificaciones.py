@@ -13,6 +13,12 @@ def modCliente():
                  (idz, name.capitalize(), dom.capitalize(), tel, idCliente,))
 
 
+def modProducto():
+    idProducto = request.form.get('idProducto')
+    valor = request.form.get('valor')
+
+    executeQuery("UPDATE Producto SET valor = ? WHERE idProducto = ?",(valor, idProducto,))
+
 def modDeuda():
     idCliente = request.form.get('idCliente')
     pagado = request.form.get('pagado')
