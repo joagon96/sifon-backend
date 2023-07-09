@@ -1,5 +1,6 @@
 from flask import Blueprint
 import sqlite3
+import calendar
 
 querysView = Blueprint('querysView', __name__, template_folder='templates')
 
@@ -27,6 +28,19 @@ def getQueryData(query, args=""):
             queryData.append(dictA)
 
     return queryData
+
+def getRowData(query, args=""):
+    with sqlite3.connect("sifono_db.db") as con:
+        c = con.cursor()
+        c.execute(query, args)
+        rows = c.fetchall()
+        names = list(map(lambda x: x[0], c.description))
+        for rowsValues in rows:
+            dictA = {}
+            for i, value in enumerate(rowsValues):
+                dictA[names[i]] = value
+
+    return dictA
 
 
 def getSingleQueryData(query, args=()):

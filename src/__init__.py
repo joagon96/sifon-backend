@@ -9,6 +9,7 @@ from src.Bajas import *
 from src.ReportesGeneral import *
 
 app = Flask(__name__)
+app.config['JSON_SORT_KEYS'] = False
 CORS(app)
 app.register_blueprint(querysView)
 
@@ -287,3 +288,36 @@ def contadorFiados():
 @app.route('/CantHistorico')
 def contadorHistoricps():
     return jsonify(ContadorHistoricos())
+
+@app.route('/ventasxmes')
+def ventasXmes():
+    return jsonify(VentasXmes())
+
+@app.route('/productosxmes')
+def productosXmes():
+    return jsonify(ProductosXmes())
+
+@app.route('/topProductos')
+def topProductos():
+    return jsonify(TopProductos())
+
+@app.route('/clientesxzona')
+def clientesXzona():
+    return jsonify(ClientesXzona())
+
+@app.route('/topClientes')
+def topClientes():
+    return jsonify(TopClientes())
+
+@app.route('/topDeudores')
+def topDeudores():
+    return jsonify(TopDeudores())
+
+@app.route('/repartosxdia')
+def repartosXdia():
+    return jsonify(RepartosXdia())
+
+@app.route('/repartosxzona')
+def repartosXzona():
+    return jsonify(RepartosXzona())
+
