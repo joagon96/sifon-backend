@@ -30,7 +30,8 @@ def modDeuda():
         deuda = 0
     executeQuery("UPDATE Cliente SET deuda = ? WHERE idCliente = ?",
                  (deuda, idCliente,))
-    executeQuery("INSERT INTO HistoricoDeuda(idCleinte,monto,comentario) VALUES (?,?,?)", (idCliente, pagado, comentario,))
+    fecha = datetime.now().strftime("%Y-%m-%d")
+    executeQuery("INSERT INTO HistoricoDeuda(idCliente,monto,comentario,fecha) VALUES (?,?,?,?)", (idCliente, pagado, comentario,fecha,))
 
 
 def modRepartidor():

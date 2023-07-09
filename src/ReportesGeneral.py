@@ -50,7 +50,7 @@ def VentasXmes():
                             INNER JOIN HistoricoLinea hl on h.idHistorico = hl.idHistorico
                             WHERE h.fecha BETWEEN date('now', '-12 months') AND date('now')
                             GROUP BY strftime('%Y', h.fecha), strftime('%m', h.fecha)
-                            ORDER BY strftime('%Y', h.fecha), strftime('%m', h.fecha) DESC;""")
+                            ORDER BY strftime('%Y', h.fecha), strftime('%m', h.fecha) ASC;""")
     report = {}
     for month in data:
         monthNumber = int(month['month'])
@@ -63,7 +63,7 @@ def ProductosXmes():
                             INNER JOIN HistoricoLinea hl on h.idHistorico = hl.idHistorico
                             WHERE h.fecha BETWEEN date('now', '-12 months') AND date('now')
                             GROUP BY strftime('%Y', h.fecha), strftime('%m', h.fecha)
-                            ORDER BY strftime('%Y', h.fecha), strftime('%m', h.fecha) DESC""")
+                            ORDER BY strftime('%Y', h.fecha), strftime('%m', h.fecha) ASC""")
     report = {}
     for month in data:
         monthNumber = int(month['month'])
@@ -97,7 +97,7 @@ def TopClientes():
     return report
 
 def TopDeudores():
-    data = getQueryData("SELECT nomapeCli, deuda FROM Cliente WHERE habilitadoC = 1 ORDER BY deuda DESC LIMIT 10;")
+    data = getQueryData("SELECT nomapeCli, deuda FROM Cliente WHERE habilitadoC = 1 AND deuda > 0 ORDER BY deuda DESC LIMIT 10;")
     report = {}
     for cliente in data:
         report[cliente['nomapeCli']] = cliente['deuda']
@@ -105,7 +105,7 @@ def TopDeudores():
 
 def RepartosXdia():
     data = getQueryData("SELECT dia, COUNT(idReparto) as repartos FROM Reparto WHERE habilitadoReparto = 1 GROUP BY dia ORDER BY COUNT(idReparto) desc")
-    report = {}
+    report = {'Lunes': 0, 'Martes': 0, 'Miercoles':0, 'Jueves': 0, 'Viernes': 0, 'Sabado': 0, 'Domingo':0}
     for dia in data:
         report[dia['dia']] = dia['repartos']
     return report
@@ -126,7 +126,7 @@ def RepartosXmes():
                             FROM Historico h
                             WHERE h.fecha BETWEEN date('now', '-12 months') AND date('now')
                             GROUP BY strftime('%Y', h.fecha), strftime('%m', h.fecha)
-                            ORDER BY strftime('%Y', h.fecha), strftime('%m', h.fecha) DESC;""")
+                            ORDER BY strftime('%Y', h.fecha), strftime('%m', h.fecha) ASC;""")
     report = {}
     for month in data:
         monthNumber = int(month['month'])
