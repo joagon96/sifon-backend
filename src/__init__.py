@@ -247,6 +247,10 @@ def resumenReparto(idReparto):
 def resumenHistorico(idHistorico):
     return ResumenHistorico(idHistorico)
 
+@app.route('/historico/deuda/<idCliente>', methods=['GET'])
+def historicoDeudaCliente(idCliente):
+    return HistoricoDeudaCliente(idCliente)
+
 
 # REPORTES
 @app.route('/CantClientes')
@@ -289,35 +293,47 @@ def contadorFiados():
 def contadorHistoricps():
     return jsonify(ContadorHistoricos())
 
-@app.route('/ventasxmes')
+@app.route('/reporte/ventasxmes')
 def ventasXmes():
     return jsonify(VentasXmes())
 
-@app.route('/productosxmes')
+@app.route('/reporte/productosxmes')
 def productosXmes():
     return jsonify(ProductosXmes())
 
-@app.route('/topProductos')
+@app.route('/reporte/topProductos')
 def topProductos():
     return jsonify(TopProductos())
 
-@app.route('/clientesxzona')
+@app.route('/reporte/clientesxzona')
 def clientesXzona():
     return jsonify(ClientesXzona())
 
-@app.route('/topClientes')
+@app.route('/reporte/topClientes')
 def topClientes():
     return jsonify(TopClientes())
 
-@app.route('/topDeudores')
+@app.route('/reporte/topDeudores')
 def topDeudores():
     return jsonify(TopDeudores())
 
-@app.route('/repartosxdia')
+@app.route('/reporte/repartosxdia')
 def repartosXdia():
     return jsonify(RepartosXdia())
 
-@app.route('/repartosxzona')
+@app.route('/reporte/repartosxzona')
 def repartosXzona():
     return jsonify(RepartosXzona())
+
+@app.route('/reporte/repartosxmes')
+def repartosXmes():
+    return jsonify(RepartosXmes())
+
+@app.route('/reporte/ventasxcliente/<idCliente>')
+def ventasXcliente(idCliente):
+    return jsonify(VentasXcliente(idCliente))
+
+@app.route('/reporte/productosxcliente/<idCliente>')
+def productosXcliente(idCliente):
+    return jsonify(ProductosXcliente(idCliente))
 

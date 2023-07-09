@@ -120,6 +120,38 @@ def RepartosXzona():
     for zona in data:
         report[zona['descripcion']] = zona['repartos']
     return report
+
+def RepartosXmes():
+    data = getQueryData("""SELECT strftime('%Y', h.fecha) AS year, strftime('%m', h.fecha) AS month, count(h.idHistorico) as repartos
+                            FROM Historico h
+                            WHERE h.fecha BETWEEN date('now', '-12 months') AND date('now')
+                            GROUP BY strftime('%Y', h.fecha), strftime('%m', h.fecha)
+                            ORDER BY strftime('%Y', h.fecha), strftime('%m', h.fecha) DESC;""")
+    report = {}
+    for month in data:
+        monthNumber = int(month['month'])
+        report[monthsDict()[monthNumber]] = month['repartos']
+    return report
+
+def VentasXcliente(idCliente):
+    data = getQueryData("""SELECT strftime('%Y', h.fecha) AS year, strftime('%m', h.fecha) AS month, SUM(hl.pago) as 'pagado'
+                            FROM Historico h
+                            INNER JOIN HistoricoLinea hl on h.idHistorico = hl.idHistorico
+                            WHERE idCliente = ? AND h.fecha BETWEEN date('now', '-12 months') AND date('now')
+                            GROUP BY strftime('%Y', h.fecha), strftime('%m', h.fecha)
+                            ORDER BY strftime('%Y', h.fecha), strftime('%m', h.fecha) DESC;""", (idCliente,))
+    report = {}
+    for month in data:
+        monthNumber = int(month['month'])
+        report[monthsDict()[monthNumber]] = month['pagado']
+    return report
+
+def ProductosXcliente(idCliente):
+    data = getQueryData("""SELECT SUM(com12) as 'Bidon 12L', SUM(com20) as 'Bidon 20L', SUM(comSoda) AS 'Sifon Soda'
+                            FROM HistoricoLinea
+                            WHERE idCliente = ?
+                            GROUP BY idCliente;""", (idCliente,))
+    return {"Bidon 12L": data[0]['Bidon 12L'],"Bidon 20L": data[0]['Bidon 20L'],"Sifon Soda": data[0]['Sifon Soda'] }
         
 def monthsDict():
     return {1:'ene',2:'feb',3:'mar',4:'abr',5:'may',6:'jun',7:'jul',8:'ago',9:'sep',10:'oct',11:'nov',12:'dic'}

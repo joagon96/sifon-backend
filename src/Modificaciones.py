@@ -22,6 +22,7 @@ def modProducto():
 def modDeuda():
     idCliente = request.form.get('idCliente')
     pagado = request.form.get('pagado')
+    comentario = request.form.get('comentario')
     deudaActual = getQueryScalar(
         "SELECT deuda FROM Cliente WHERE idCliente = ?", (idCliente,))
     deuda = deudaActual[0] - int(pagado)
@@ -29,6 +30,7 @@ def modDeuda():
         deuda = 0
     executeQuery("UPDATE Cliente SET deuda = ? WHERE idCliente = ?",
                  (deuda, idCliente,))
+    executeQuery("INSERT INTO HistoricoDeuda(idCleinte,monto,comentario) VALUES (?,?,?)", (idCliente, pagado, comentario,))
 
 
 def modRepartidor():
@@ -90,7 +92,7 @@ def FinalizarReparto(idReparto):
             deudaTotal = linea['deuda'] + linea['fiado']
             executeQuery("UPDATE Cliente SET deuda = ? WHERE idCliente = ?",
                          (deudaTotal, linea['idCliente']))
-        executeQuery("INSERT INTO HistoricoLinea(idHistorico,cliente,domicilio,com12,com20,comSoda,pago,fiado,dev12,dev20,devSoda,observacion) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", (
+        executeQuery("INSERT INTO HistoricoLinea(idHistorico,cliente,domicilio,com12,com20,comSoda,pago,fiado,dev12,dev20,devSoda,observacion,idCliente) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", (
             idh,
             linea['nomapeCli'],
             linea['domicilio'],
@@ -103,6 +105,7 @@ def FinalizarReparto(idReparto):
             linea['dev20'],
             linea['devSoda'],
             linea['observacion'],
+            linea['idCliente'],
         ))
     executeQuery("UPDATE LineaReparto SET com12= ?, com20= ?, comSoda= ?, pago= ?, fiado= ?, dev12= ?, dev20= ? , devSoda= ?, observacion =?  WHERE idReparto = ?",
                  (0, 0, 0, 0, 0, 0, 0, 0, "", idReparto,))
