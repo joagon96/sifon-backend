@@ -137,3 +137,27 @@ def ResumenHistorico(idHistorico):
 
 def HistoricoDeudaCliente(idCliente):
     return jsonify(getQueryData("SELECT * FROM HistoricoDeuda WHERE idCliente = ? ORDER BY idHistoricoDeuda DESC LIMIT 10", (idCliente,)))
+
+def BuscarReparto():
+    zona = request.form.get('idZona')
+    dia = request.form.get('dia')
+    repartidor = request.form.get('idRepartidor')
+    params = []
+    values = []
+    query = "SELECT * FROM Reparto "
+    if zona:
+        params.append("idZona = ?")
+        values.append(zona)
+    if dia:
+        params.append("dia = ?")
+        values.append(dia)
+    if repartidor:
+        params.append("idRepartidor = ?")
+        values.append(repartidor)
+    if (len(params) > 0 and len(values) > 0):
+        separator = " AND "
+        query += "WHERE " + separator.join(params) + " AND habilitadoReparto = 1"
+
+
+    query += " ORDER BY idReparto DESC"
+    return jsonify(getQueryData(query, values))

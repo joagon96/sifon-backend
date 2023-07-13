@@ -251,6 +251,10 @@ def resumenHistorico(idHistorico):
 def historicoDeudaCliente(idCliente):
     return HistoricoDeudaCliente(idCliente)
 
+@app.route('/search/reparto', methods=['POST'])
+def buscarReparto():
+    return BuscarReparto()
+
 
 # REPORTES
 @app.route('/CantClientes')
