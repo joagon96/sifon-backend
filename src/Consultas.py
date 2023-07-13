@@ -144,19 +144,19 @@ def BuscarReparto():
     repartidor = request.form.get('idRepartidor')
     params = []
     values = []
-    query = "SELECT * FROM Reparto "
+    query = "SELECT * FROM Reparto r NATURAL JOIN Repartidor NATURAL JOIN Zona "
     if zona:
-        params.append("idZona = ?")
+        params.append("r.idZona = ?")
         values.append(zona)
     if dia:
-        params.append("dia = ?")
+        params.append("r.dia = ?")
         values.append(dia)
     if repartidor:
-        params.append("idRepartidor = ?")
+        params.append("r.idRepartidor = ?")
         values.append(repartidor)
     if (len(params) > 0 and len(values) > 0):
         separator = " AND "
-        query += "WHERE " + separator.join(params) + " AND habilitadoReparto = 1"
+        query += "WHERE " + separator.join(params) + " AND r.habilitadoReparto = 1"
 
 
     query += " ORDER BY idReparto DESC"
