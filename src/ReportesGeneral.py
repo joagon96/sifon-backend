@@ -139,7 +139,7 @@ def VentasXcliente(idCliente):
                             INNER JOIN HistoricoLinea hl on h.idHistorico = hl.idHistorico
                             WHERE idCliente = ? AND h.fecha BETWEEN date('now', '-12 months') AND date('now')
                             GROUP BY strftime('%Y', h.fecha), strftime('%m', h.fecha)
-                            ORDER BY strftime('%Y', h.fecha), strftime('%m', h.fecha) DESC;""", (idCliente,))
+                            ORDER BY strftime('%Y', h.fecha), strftime('%m', h.fecha) ASC;""", (idCliente,))
     report = {}
     for month in data:
         monthNumber = int(month['month'])
