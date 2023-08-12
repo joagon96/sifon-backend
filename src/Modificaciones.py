@@ -26,8 +26,6 @@ def modDeuda():
     deudaActual = getQueryScalar(
         "SELECT deuda FROM Cliente WHERE idCliente = ?", (idCliente,))
     deuda = deudaActual[0] - int(pagado)
-    if deuda < 0:
-        deuda = 0
     executeQuery("UPDATE Cliente SET deuda = ? WHERE idCliente = ?",
                  (deuda, idCliente,))
     fecha = datetime.now().strftime("%Y-%m-%d")
@@ -89,7 +87,7 @@ def FinalizarReparto(idReparto):
         lineasReparto[0]['dia'],
     ))
     for linea in lineasReparto:
-        if linea['fiado'] > 0:
+        if linea['fiado'] != 0:
             deudaTotal = linea['deuda'] + linea['fiado']
             executeQuery("UPDATE Cliente SET deuda = ? WHERE idCliente = ?",
                          (deudaTotal, linea['idCliente']))
