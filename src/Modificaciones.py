@@ -25,7 +25,7 @@ def modDeuda():
     comentario = request.form.get('comentario')
     deudaActual = getQueryScalar(
         "SELECT deuda FROM Cliente WHERE idCliente = ?", (idCliente,))
-    deuda = deudaActual[0] - int(pagado)
+    deuda = deudaActual[0] - float(pagado)
     executeQuery("UPDATE Cliente SET deuda = ? WHERE idCliente = ?",
                  (deuda, idCliente,))
     fecha = datetime.now().strftime("%Y-%m-%d")
