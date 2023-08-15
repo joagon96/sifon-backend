@@ -87,10 +87,17 @@ def FinalizarReparto(idReparto):
         lineasReparto[0]['dia'],
     ))
     for linea in lineasReparto:
-        if linea['fiado'] != 0:
-            deudaTotal = linea['deuda'] + linea['fiado']
-            executeQuery("UPDATE Cliente SET deuda = ? WHERE idCliente = ?",
-                         (deudaTotal, linea['idCliente']))
+        deuda = linea['deuda']
+        pago = linea['pago']
+
+        productos = getQueryData("SELECT * FROM Producto;")
+        pagoTotal = (productos[0]['valor']*linea['com12'] + productos[1]['valor']*linea['com20'] + productos[2]['valor']*linea['comSoda']) + deuda
+
+        fiado = pagoTotal - pago
+
+        executeQuery("UPDATE Cliente SET deuda = ? WHERE idCliente = ?",
+                    (fiado, linea['idCliente']))
+                
         executeQuery("INSERT INTO HistoricoLinea(idHistorico,cliente,domicilio,com12,com20,comSoda,pago,fiado,dev12,dev20,devSoda,observacion,idCliente) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", (
             idh,
             linea['nomapeCli'],
