@@ -107,7 +107,7 @@ def BuscarHistorico():
     fecha = request.form.get('fecha')
     params = []
     values = []
-    query = "SELECT * FROM Historico "
+    query = "SELECT h.idHistorico, h.fecha, h.repartidor, h.zona, h.dia, sum(hl.pago) as recaudado, sum(hl.fiado) as fiado FROM Historico h JOIN HistoricoLinea hl ON h.idHistorico = hl.idHistorico "
     if zona:
         params.append("zona = ?")
         values.append(zona)
@@ -124,7 +124,7 @@ def BuscarHistorico():
         separator = " AND "
         query += "WHERE " + separator.join(params)
 
-    query += " ORDER BY idHistorico DESC"
+    query += " GROUP BY h.idHistorico ORDER BY h.idHistorico DESC"
     return jsonify(getQueryData(query, values))
 
 
